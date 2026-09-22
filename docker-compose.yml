@@ -1,0 +1,21 @@
+# docker-compose.yml
+# ไฟล์นี้บอก Docker ว่าจะสร้าง "กล่อง" (container) อะไรบ้าง
+# ตอนนี้เราต้องการแค่ตัวเดียวคือ MySQL
+
+services:
+  mysql:
+    image: mysql:8.0              # ใช้ MySQL เวอร์ชัน 8.0 (ดึงจาก Docker Hub)
+    container_name: retireplan-db # ตั้งชื่อ container ให้จำง่าย
+    restart: always              # ถ้า container ล่ม ให้รีสตาร์ทเองอัตโนมัติ
+    environment:                 # ค่าตั้งต้นตอนสร้าง MySQL
+      MYSQL_ROOT_PASSWORD: rootpass  # รหัสของ root (admin สูงสุด)
+      MYSQL_DATABASE: retireplan     # สร้าง database ชื่อนี้ให้อัตโนมัติ
+      MYSQL_USER: appuser            # user สำหรับแอปเราใช้
+      MYSQL_PASSWORD: apppass        # รหัสของ appuser
+    ports:
+      - "3306:3306"              # เปิดประตู port 3306 ให้เครื่องเราต่อเข้าไปได้
+    volumes:
+      - mysql_data:/var/lib/mysql # เก็บข้อมูลถาวร ไม่หายเวลาปิด/ลบ container
+
+volumes:
+  mysql_data:                    # ประกาศพื้นที่เก็บข้อมูลถาวรที่ใช้ด้านบน
