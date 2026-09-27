@@ -1,0 +1,14 @@
+// src/tax/tax.controller.ts
+import { Body, Controller, Post } from '@nestjs/common';
+import { CalculateTaxDto } from './dto/calculate-tax.dto.js';
+import { TaxService } from './tax.service.js';
+
+@Controller('tax')
+export class TaxController {
+  constructor(private readonly taxService: TaxService) {}
+
+  @Post('calculate')
+  calculate(@Body() dto: CalculateTaxDto) {
+    return this.taxService.calculate(dto);
+  }
+}

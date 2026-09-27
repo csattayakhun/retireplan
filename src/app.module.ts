@@ -6,6 +6,7 @@ import { AppService } from './app.service.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { AuthModule } from './auth/auth.module.js';
 import { RetirementModule } from './retirement/retirement.module.js';
+import { TaxModule } from './tax/tax.module.js';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { RetirementModule } from './retirement/retirement.module.js';
     PrismaModule,
     AuthModule,
     RetirementModule,
+    TaxModule,
   ],
   controllers: [AppController],
   providers: [AppService],
