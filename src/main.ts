@@ -12,6 +12,8 @@ async function bootstrap() {
     }),
   );
 
+   app.enableCors();
+
   // ---- ตั้งค่า Swagger (OpenAPI) ----
   const config = new DocumentBuilder()
     .setTitle('RetirePlan API')
@@ -23,5 +25,6 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document); // ⬅️ เปิดที่ /docs
 
   await app.listen(process.env.PORT ?? 3000);
+
 }
 await bootstrap();
