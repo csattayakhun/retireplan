@@ -1,0 +1,89 @@
+// schema.prisma
+// ไฟล์นี้คือ "พิมพ์เขียว" ของฐานข้อมูลทั้งหมด
+// เราออกแบบตารางที่นี่ แล้ว Prisma จะไปสร้างตารางจริงใน MySQL ให้
+
+// ---------- ส่วนตั้งค่า ----------
+
+generator client {
+  provider = "prisma-client-js" // สร้างโค้ด TypeScript ให้เราเรียกใช้ database
+}
+
+datasource db {
+  provider = "mysql"            // ใช้ MySQL
+  url      = env("DATABASE_URL") // อ่านที่อยู่ database จากไฟล์ .env
+}
+
+// ---------- ตาราง (Models) ----------
+
+// 👤 ตารางผู้ใช้ — เก็บบัญชีที่สมัคร/ล็อกอิน
+model User {
+  id        Int      @id @default(autoincrement()) // รหัสประจำตัว เพิ่มเองอัตโนมัติ
+  email     String   @unique                       // อีเมล ห้ามซ้ำ (ใช้ล็อกอิน)
+  password  String                                 // รหัสผ่าน (เก็บแบบเข้ารหัส ไม่ใช่ตัวจริง)
+  name      String?                                // ชื่อ (? = มีหรือไม่มีก็ได้)
+  createdAt DateTime @default(now())               // วันที่สมัคร ใส่เวลาปัจจุบันอัตโนมัติ
+  updatedAt DateTime @updatedAt                     // อัปเดตเวลาทุกครั้งที่แก้ข้อมูล
+
+  // ความสัมพันธ์: 1 user มีได้หลายแผน (one-to-many)
+  retirementPlans RetirementPlan[]
+  taxPlans        TaxPlan[]
+}
+
+// 💰 ตารางแผนเกษียณ — เก็บทั้งข้อมูลที่กรอก และผลลัพธ์ที่คำนวณ
+model RetirementPlan {
+  id       Int    @id @default(autoincrement())
+  planName String @default("แผนเกษียณของฉัน")
+
+  // --- ข้อมูลที่ผู้ใช้กรอก (Input) ---
+  currentAge         Int // อายุปัจจุบัน
+  retirementAge      Int // อายุที่อยากเกษียณ
+  lifeExpectancyAge  Int // อายุที่อยากให้เงินพอใช้ถึง
+  currentSavings     Int // เงินเก็บตอนนี้ (เก็บเป็นจำนวนบาทเต็ม)
+  monthlySaving      Int // เงินออมเพิ่มต่อเดือน
+  monthlyExpense     Int // ค่าใช้จ่ายต่อเดือนหลังเกษียณ
+  monthlyPension     Int @default(0) // รายได้บำนาญต่อเดือน
+  monthlyRental      Int @default(0) // รายได้ค่าเช่าต่อเดือน
+
+  // --- สมมติฐาน (Assumptions) เก็บเป็น % ---
+  returnBefore  Float @default(5) // ผลตอบแทนก่อนเกษียณ (%)
+  returnAfter   Float @default(2) // ผลตอบแทนหลังเกษียณ (%)
+  inflationRate Float @default(3) // เงินเฟ้อ (%)
+
+  // --- ผลลัพธ์ที่คำนวณแล้ว (Output) — nullable เพราะมีค่าเมื่อคำนวณเสร็จ ---
+  targetAmount    Int? // เงินก้อนที่ควรมีตอนเกษียณ
+  projectedAmount Int? // เงินที่คาดว่าจะมีจริง
+  gap             Int? // ช่องว่าง (target - projected)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // ความสัมพันธ์: แผนนี้เป็นของ user คนไหน (many-to-one)
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // ทำ index ที่ userId เพื่อค้นหาแผนของ user เร็วขึ้น
+}
+
+// 🧾 ตารางแผนภาษี — เก็บข้อมูลกรอกและภาษีที่คำนวณได้
+model TaxPlan {
+  id       Int    @id @default(autoincrement())
+  planName String @default("แผนภาษีของฉัน")
+
+  // --- ข้อมูลที่ผู้ใช้กรอก (Input) ---
+  taxYear        Int    // ปีภาษี เช่น 2569
+  maritalStatus  String @default("single") // สถานะ: single / married
+  totalIncome    Int    // รายได้รวมทั้งปี
+  deductions     Int    @default(60000) // ค่าลดหย่อนรวม (เริ่มที่ส่วนตัว 60,000)
+  withholdingTax Int    @default(0) // ภาษีที่ถูกหัก ณ ที่จ่ายไว้แล้ว
+
+  // --- ผลลัพธ์ (Output) ---
+  estimatedTax Int? // ภาษีที่คำนวณได้
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
