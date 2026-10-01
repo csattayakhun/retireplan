@@ -21,9 +21,11 @@ export interface RetirementResult {
   gap: number;
 }
 
-/** แปลง % ต่อปี → อัตราต่อเดือน (nominal: หาร 12) */
+const MONTHS_PER_YEAR = 12;
+
+/** แปลง % ต่อปี → อัตราต่อเดือน (nominal) */
 function toMonthlyRate(annualPercent: number): number {
-  return annualPercent / 100 / 12;
+  return annualPercent / 100 / MONTHS_PER_YEAR;
 }
 
 /** ①  เงินที่ควรมี ณ วันเกษียณ (Present Value of Annuity) */
@@ -31,7 +33,7 @@ export function calcTargetAmount(input: RetirementInput): number {
   const yearsToRetire = Math.max(0, input.retireAge - input.currentAge);
   const monthsInRetirement = Math.max(
     0,
-    (input.lifeExpectancy - input.retireAge) * 12,
+    (input.lifeExpectancy - input.retireAge) * MONTHS_PER_YEAR,
   );
   const inflationRate = input.inflation / 100;
   const r = toMonthlyRate(input.returnAfter);
@@ -53,7 +55,10 @@ export function calcTargetAmount(input: RetirementInput): number {
 
 /** ②  เงินที่คาดว่าจะมีจริง ณ วันเกษียณ (Compound + FV of Annuity) */
 export function calcProjectedAmount(input: RetirementInput): number {
-  const monthsToRetire = Math.max(0, (input.retireAge - input.currentAge) * 12);
+  const monthsToRetire = Math.max(
+    0,
+    (input.retireAge - input.currentAge) * MONTHS_PER_YEAR,
+  );
   const r = toMonthlyRate(input.returnBefore);
 
   const fvCurrent = input.currentSavings * Math.pow(1 + r, monthsToRetire);
