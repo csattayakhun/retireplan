@@ -15,14 +15,16 @@ datasource db {
 
 // ---------- ตาราง (Models) ----------
 
-// 👤 ตารางผู้ใช้ — เก็บบัญชีที่สมัคร/ล็อกอิน
+// 👤 ตารางผู้ใช้ — เก็บบัญชี (เข้าสู่ระบบด้วย Google)
 model User {
-  id        Int      @id @default(autoincrement()) // รหัสประจำตัว เพิ่มเองอัตโนมัติ
-  email     String   @unique                       // อีเมล ห้ามซ้ำ (ใช้ล็อกอิน)
-  password  String                                 // รหัสผ่าน (เก็บแบบเข้ารหัส ไม่ใช่ตัวจริง)
-  name      String?                                // ชื่อ (? = มีหรือไม่มีก็ได้)
-  createdAt DateTime @default(now())               // วันที่สมัคร ใส่เวลาปัจจุบันอัตโนมัติ
-  updatedAt DateTime @updatedAt                     // อัปเดตเวลาทุกครั้งที่แก้ข้อมูล
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String?                 // nullable — เปลี่ยนมาใช้ Google login แล้ว
+  googleId  String?  @unique        // id จาก Google ไว้ระบุตัวตน
+  name      String?
+  avatarUrl String?                 // รูปโปรไฟล์จาก Google (ถ้ามี)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // ความสัมพันธ์: 1 user มีได้หลายแผน (one-to-many)
   retirementPlans RetirementPlan[]
