@@ -5,22 +5,28 @@ import { plainToInstance } from 'class-transformer';
 import { IsNotEmpty, IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
-  @IsString() @IsNotEmpty()
+  @IsString()
+  @IsNotEmpty()
   DATABASE_URL!: string;
 
-  @IsString() @IsNotEmpty()
+  @IsString()
+  @IsNotEmpty()
   JWT_SECRET!: string;
 
-  @IsString() @IsNotEmpty()
+  @IsString()
+  @IsNotEmpty()
   GOOGLE_CLIENT_ID!: string;
 
-  @IsString() @IsNotEmpty()
+  @IsString()
+  @IsNotEmpty()
   GOOGLE_CLIENT_SECRET!: string;
 
-  @IsString() @IsNotEmpty()
+  @IsString()
+  @IsNotEmpty()
   GOOGLE_CALLBACK_URL!: string;
 
-  @IsString() @IsNotEmpty()
+  @IsString()
+  @IsNotEmpty()
   FRONTEND_URL!: string;
 }
 

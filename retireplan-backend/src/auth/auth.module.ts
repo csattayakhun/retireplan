@@ -21,6 +21,6 @@ import { GoogleStrategy } from './google.strategy.js';
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, GoogleStrategy],
-  exports: [PassportModule, JwtStrategy], 
+  exports: [PassportModule, JwtStrategy],
 })
 export class AuthModule {}

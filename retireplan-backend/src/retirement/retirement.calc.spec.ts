@@ -39,7 +39,12 @@ describe('calcProjectedAmount (เงินที่คาดว่าจะม�
   });
 
   it('เกษียณไปแล้ว (retireAge ≤ currentAge) → ไม่ติดลบ คืนเงินก้อนเดิม', () => {
-    const input = { ...base, currentAge: 65, retireAge: 60, currentSavings: 500_000 };
+    const input = {
+      ...base,
+      currentAge: 65,
+      retireAge: 60,
+      currentSavings: 500_000,
+    };
     expect(calcProjectedAmount(input)).toBe(500_000);
   });
 });

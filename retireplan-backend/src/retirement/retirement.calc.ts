@@ -29,13 +29,18 @@ function toMonthlyRate(annualPercent: number): number {
 /** ①  เงินที่ควรมี ณ วันเกษียณ (Present Value of Annuity) */
 export function calcTargetAmount(input: RetirementInput): number {
   const yearsToRetire = Math.max(0, input.retireAge - input.currentAge);
-  const monthsInRetirement = Math.max(0, (input.lifeExpectancy - input.retireAge) * 12);
+  const monthsInRetirement = Math.max(
+    0,
+    (input.lifeExpectancy - input.retireAge) * 12,
+  );
   const inflationRate = input.inflation / 100;
   const r = toMonthlyRate(input.returnAfter);
 
   const expenseAtRetire =
-    input.monthlyExpenseAfterRetire * Math.pow(1 + inflationRate, yearsToRetire);
-  const passiveIncome = (input.monthlyPension ?? 0) + (input.monthlyRentIncome ?? 0);
+    input.monthlyExpenseAfterRetire *
+    Math.pow(1 + inflationRate, yearsToRetire);
+  const passiveIncome =
+    (input.monthlyPension ?? 0) + (input.monthlyRentIncome ?? 0);
   const netMonthlyNeed = Math.max(0, expenseAtRetire - passiveIncome);
 
   const target =

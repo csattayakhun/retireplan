@@ -6,6 +6,6 @@ import { RetirementController } from './retirement.controller.js';
 @Module({
   imports: [AuthModule],
   providers: [RetirementService],
-  controllers: [RetirementController]
+  controllers: [RetirementController],
 })
 export class RetirementModule {}

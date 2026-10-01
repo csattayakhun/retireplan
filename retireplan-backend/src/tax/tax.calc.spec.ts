@@ -34,7 +34,11 @@ describe('calculateTax (ตัวรวม)', () => {
   });
 
   it('ภาษีหัก ณ ที่จ่าย > ภาษีจริง → ได้เงินคืน (taxDue ติดลบ)', () => {
-    const r = calculateTax({ totalIncome: 600_000, deductions: 200_000, withholdingTax: 20_000 });
+    const r = calculateTax({
+      totalIncome: 600_000,
+      deductions: 200_000,
+      withholdingTax: 20_000,
+    });
     expect(r.taxDue).toBe(-2_500); // 17,500 − 20,000
   });
 

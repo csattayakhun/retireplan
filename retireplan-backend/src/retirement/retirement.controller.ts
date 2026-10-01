@@ -1,6 +1,15 @@
 // src/retirement/retirement.controller.ts
 import {
-  Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Req, UseGuards,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
