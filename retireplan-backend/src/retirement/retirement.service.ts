@@ -25,20 +25,20 @@ export class RetirementService {
     return calculateRetirement(dto);
   }
 
-  /** แปลงชื่อ field จาก DB/DTO → ให้ตรงกับ input ของ calc */
+  /** เติมค่า default ให้ครบก่อนส่งเข้า calc (ชื่อ field ตรงกันทุกเลเยอร์แล้ว) */
   private toCalcInput(p: CreateRetirementPlanDto): RetirementInput {
     return {
       currentAge: p.currentAge,
-      retireAge: p.retirementAge,
-      lifeExpectancy: p.lifeExpectancyAge,
+      retirementAge: p.retirementAge,
+      lifeExpectancyAge: p.lifeExpectancyAge,
       currentSavings: p.currentSavings,
       monthlySaving: p.monthlySaving,
-      monthlyExpenseAfterRetire: p.monthlyExpense,
+      monthlyExpense: p.monthlyExpense,
       monthlyPension: p.monthlyPension ?? 0,
-      monthlyRentIncome: p.monthlyRental ?? 0,
+      monthlyRental: p.monthlyRental ?? 0,
       returnBefore: p.returnBefore ?? DEFAULT_RETURN_BEFORE,
       returnAfter: p.returnAfter ?? DEFAULT_RETURN_AFTER,
-      inflation: p.inflationRate ?? DEFAULT_INFLATION_RATE,
+      inflationRate: p.inflationRate ?? DEFAULT_INFLATION_RATE,
     };
   }
 

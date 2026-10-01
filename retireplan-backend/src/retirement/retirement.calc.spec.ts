@@ -1,23 +1,22 @@
-// src/retirement/retirement.calc.spec.ts
 import { describe, it, expect } from 'vitest';
 import {
   calcProjectedAmount,
   calcTargetAmount,
   calculateRetirement,
   type RetirementInput,
-} from './retirement.calc.js'; // ⚠️ ESM: import ไฟล์ตัวเองลงท้าย .js เสมอ
+} from './retirement.calc.js';
 
-// ฐานข้อมูล input กลางไว้ใช้ซ้ำ แล้วค่อย override ทีละเคส (DRY)
+// input กลางไว้ใช้ซ้ำ แล้ว override ทีละเคส (DRY)
 const base: RetirementInput = {
   currentAge: 30,
-  retireAge: 60,
-  lifeExpectancy: 80,
+  retirementAge: 60,
+  lifeExpectancyAge: 80,
   currentSavings: 0,
   monthlySaving: 0,
-  monthlyExpenseAfterRetire: 0,
+  monthlyExpense: 0,
   returnBefore: 0,
   returnAfter: 0,
-  inflation: 0,
+  inflationRate: 0,
 };
 
 describe('calcProjectedAmount (เงินที่คาดว่าจะมี)', () => {
@@ -38,11 +37,11 @@ describe('calcProjectedAmount (เงินที่คาดว่าจะม�
     expect(calcProjectedAmount(input)).toBe(126_825);
   });
 
-  it('เกษียณไปแล้ว (retireAge ≤ currentAge) → ไม่ติดลบ คืนเงินก้อนเดิม', () => {
+  it('เกษียณไปแล้ว (retirementAge ≤ currentAge) → ไม่ติดลบ คืนเงินก้อนเดิม', () => {
     const input = {
       ...base,
       currentAge: 65,
-      retireAge: 60,
+      retirementAge: 60,
       currentSavings: 500_000,
     };
     expect(calcProjectedAmount(input)).toBe(500_000);
@@ -54,7 +53,7 @@ describe('calcTargetAmount (เงินที่ควรมี)', () => {
     const input = {
       ...base,
       currentAge: 60, // เกษียณเลย → ไม่ต้องปรับเงินเฟ้อ
-      monthlyExpenseAfterRetire: 20_000,
+      monthlyExpense: 20_000,
     };
     // 20,000 × (20 ปี × 12) = 4,800,000
     expect(calcTargetAmount(input)).toBe(4_800_000);
@@ -64,9 +63,9 @@ describe('calcTargetAmount (เงินที่ควรมี)', () => {
     const input = {
       ...base,
       currentAge: 60,
-      monthlyExpenseAfterRetire: 20_000,
+      monthlyExpense: 20_000,
       monthlyPension: 15_000,
-      monthlyRentIncome: 6_000, // รวม 21,000 > 20,000
+      monthlyRental: 6_000, // รวม 21,000 > 20,000
     };
     expect(calcTargetAmount(input)).toBe(0);
   });
@@ -78,10 +77,10 @@ describe('calculateRetirement (ตัวรวม)', () => {
       ...base,
       currentSavings: 200_000,
       monthlySaving: 8_000,
-      monthlyExpenseAfterRetire: 25_000,
+      monthlyExpense: 25_000,
       returnBefore: 6,
       returnAfter: 4,
-      inflation: 3,
+      inflationRate: 3,
     };
     const r = calculateRetirement(input);
     expect(r.gap).toBe(r.targetAmount - r.projectedAmount);

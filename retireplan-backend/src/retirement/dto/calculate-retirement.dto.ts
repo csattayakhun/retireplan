@@ -1,56 +1,57 @@
 // src/retirement/dto/calculate-retirement.dto.ts
+// ชื่อ field ตรงกับ schema.prisma / RetirementInput — ไม่ต้อง map ข้ามเลเยอร์
 import { IsInt, IsNumber, IsOptional, Min, Max } from 'class-validator';
 
 export class CalculateRetirementDto {
   @IsInt()
   @Min(15)
   @Max(100)
-  currentAge!: number; // อายุปัจจุบัน (ปี)
+  currentAge!: number;
 
   @IsInt()
   @Min(15)
   @Max(100)
-  retireAge!: number; // อายุที่จะเกษียณ
+  retirementAge!: number;
 
   @IsInt()
   @Min(15)
   @Max(120)
-  lifeExpectancy!: number; // คาดว่าจะใช้ชีวิตถึงอายุ
+  lifeExpectancyAge!: number;
 
   @IsInt()
   @Min(0)
-  currentSavings!: number; // เงินเก็บปัจจุบัน (บาท)
+  currentSavings!: number;
 
   @IsInt()
   @Min(0)
-  monthlySaving!: number; // ออมเพิ่มต่อเดือน (บาท)
+  monthlySaving!: number;
 
   @IsInt()
   @Min(0)
-  monthlyExpenseAfterRetire!: number; // ค่าใช้จ่ายต่อเดือน "หลังเกษียณ" (บาท, ราคาปัจจุบัน)
+  monthlyExpense!: number; // ค่าใช้จ่ายต่อเดือนหลังเกษียณ (ราคาปัจจุบัน)
 
   @IsOptional()
   @IsInt()
   @Min(0)
-  monthlyPension?: number; // บำนาญต่อเดือน (ถ้ามี)
+  monthlyPension?: number;
 
   @IsOptional()
   @IsInt()
   @Min(0)
-  monthlyRentIncome?: number; // ค่าเช่า/รายได้ประจำต่อเดือน (ถ้ามี)
+  monthlyRental?: number;
 
   @IsNumber()
   @Min(0)
   @Max(100)
-  returnBefore!: number; // % ผลตอบแทนต่อปี "ก่อน" เกษียณ (6 = 6%)
+  returnBefore!: number; // % ต่อปี ก่อนเกษียณ (6 = 6%)
 
   @IsNumber()
   @Min(0)
   @Max(100)
-  returnAfter!: number; // % ผลตอบแทนต่อปี "หลัง" เกษียณ
+  returnAfter!: number; // % ต่อปี หลังเกษียณ
 
   @IsNumber()
   @Min(0)
   @Max(100)
-  inflation!: number; // % เงินเฟ้อต่อปี
+  inflationRate!: number; // % เงินเฟ้อต่อปี
 }

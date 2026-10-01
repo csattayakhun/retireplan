@@ -15,16 +15,16 @@ import { useAuth } from './auth-context';
 
 interface FormState {
   currentAge: number;
-  retireAge: number;
-  lifeExpectancy: number;
+  retirementAge: number;
+  lifeExpectancyAge: number;
   currentSavings: number;
   monthlySaving: number;
-  monthlyExpenseAfterRetire: number;
+  monthlyExpense: number;
   monthlyPension: number;
-  monthlyRentIncome: number;
+  monthlyRental: number;
   returnBefore: number;
   returnAfter: number;
-  inflation: number;
+  inflationRate: number;
 }
 interface Result {
   targetAmount: number;
@@ -34,25 +34,25 @@ interface Result {
 
 const initialForm: FormState = {
   currentAge: 30,
-  retireAge: 60,
-  lifeExpectancy: 80,
+  retirementAge: 60,
+  lifeExpectancyAge: 80,
   currentSavings: 100000,
   monthlySaving: 5000,
-  monthlyExpenseAfterRetire: 20000,
+  monthlyExpense: 20000,
   monthlyPension: 0,
-  monthlyRentIncome: 0,
+  monthlyRental: 0,
   returnBefore: 6,
   returnAfter: 4,
-  inflation: 3,
+  inflationRate: 3,
 };
 
 // ช่องที่เป็น "เงิน" → แสดง ฿ + คอมมา
 const moneyFields = new Set<keyof FormState>([
   'currentSavings',
   'monthlySaving',
-  'monthlyExpenseAfterRetire',
+  'monthlyExpense',
   'monthlyPension',
-  'monthlyRentIncome',
+  'monthlyRental',
 ]);
 
 const sections: {
@@ -63,8 +63,8 @@ const sections: {
     title: 'ข้อมูลอายุ',
     fields: [
       { key: 'currentAge', label: 'อายุปัจจุบัน' },
-      { key: 'retireAge', label: 'อายุที่จะเกษียณ' },
-      { key: 'lifeExpectancy', label: 'คาดว่าอยู่ถึงอายุ' },
+      { key: 'retirementAge', label: 'อายุที่จะเกษียณ' },
+      { key: 'lifeExpectancyAge', label: 'คาดว่าอยู่ถึงอายุ' },
     ],
   },
   {
@@ -72,9 +72,9 @@ const sections: {
     fields: [
       { key: 'currentSavings', label: 'เงินเก็บปัจจุบัน' },
       { key: 'monthlySaving', label: 'ออมต่อเดือน' },
-      { key: 'monthlyExpenseAfterRetire', label: 'ค่าใช้จ่าย/เดือน หลังเกษียณ' },
+      { key: 'monthlyExpense', label: 'ค่าใช้จ่าย/เดือน หลังเกษียณ' },
       { key: 'monthlyPension', label: 'บำนาญ/เดือน' },
-      { key: 'monthlyRentIncome', label: 'ค่าเช่า/เดือน' },
+      { key: 'monthlyRental', label: 'ค่าเช่า/เดือน' },
     ],
   },
   {
@@ -82,7 +82,7 @@ const sections: {
     fields: [
       { key: 'returnBefore', label: 'ผลตอบแทนก่อนเกษียณ' },
       { key: 'returnAfter', label: 'ผลตอบแทนหลังเกษียณ' },
-      { key: 'inflation', label: 'เงินเฟ้อ' },
+      { key: 'inflationRate', label: 'เงินเฟ้อ' },
     ],
   },
 ];
@@ -107,20 +107,8 @@ export function Calculator() {
   async function handleSave() {
     setSaving(true);
     try {
-      // map ชื่อ field จากฟอร์ม → ให้ตรงกับ backend DTO
-      await savePlan({
-        currentAge: form.currentAge,
-        retirementAge: form.retireAge,
-        lifeExpectancyAge: form.lifeExpectancy,
-        currentSavings: form.currentSavings,
-        monthlySaving: form.monthlySaving,
-        monthlyExpense: form.monthlyExpenseAfterRetire,
-        monthlyPension: form.monthlyPension,
-        monthlyRental: form.monthlyRentIncome,
-        returnBefore: form.returnBefore,
-        returnAfter: form.returnAfter,
-        inflationRate: form.inflation,
-      });
+      // ชื่อ field ของ form ตรงกับ backend DTO แล้ว → ส่งได้ตรงๆ ไม่ต้อง map
+      await savePlan(form);
       setSaved(true);
       showToast('บันทึกแผนเรียบร้อย ✓');
     } catch {
