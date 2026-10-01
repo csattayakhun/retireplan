@@ -26,9 +26,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // ความสัมพันธ์: 1 user มีได้หลายแผน (one-to-many)
+  // ความสัมพันธ์: 1 user มีได้หลายแผนเกษียณ (one-to-many)
   retirementPlans RetirementPlan[]
-  taxPlans        TaxPlan[]
 }
 
 // 💰 ตารางแผนเกษียณ — เก็บทั้งข้อมูลที่กรอก และผลลัพธ์ที่คำนวณ
@@ -64,28 +63,4 @@ model RetirementPlan {
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId]) // ทำ index ที่ userId เพื่อค้นหาแผนของ user เร็วขึ้น
-}
-
-// 🧾 ตารางแผนภาษี — เก็บข้อมูลกรอกและภาษีที่คำนวณได้
-model TaxPlan {
-  id       Int    @id @default(autoincrement())
-  planName String @default("แผนภาษีของฉัน")
-
-  // --- ข้อมูลที่ผู้ใช้กรอก (Input) ---
-  taxYear        Int    // ปีภาษี เช่น 2569
-  maritalStatus  String @default("single") // สถานะ: single / married
-  totalIncome    Int    // รายได้รวมทั้งปี
-  deductions     Int    @default(60000) // ค่าลดหย่อนรวม (เริ่มที่ส่วนตัว 60,000)
-  withholdingTax Int    @default(0) // ภาษีที่ถูกหัก ณ ที่จ่ายไว้แล้ว
-
-  // --- ผลลัพธ์ (Output) ---
-  estimatedTax Int? // ภาษีที่คำนวณได้
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
 }
