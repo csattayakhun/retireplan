@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -9,9 +9,9 @@ import {
   Cell,
   Tooltip,
   ResponsiveContainer,
-} from 'recharts';
-import { API_URL, savePlan } from '../lib/api';
-import { useAuth } from './auth-context';
+} from "recharts";
+import { API_URL, savePlan } from "../lib/api";
+import { useAuth } from "./auth-context";
 
 interface FormState {
   currentAge: number;
@@ -46,13 +46,12 @@ const initialForm: FormState = {
   inflationRate: 3,
 };
 
-// ช่องที่เป็น "เงิน" → แสดง ฿ + คอมมา
 const moneyFields = new Set<keyof FormState>([
-  'currentSavings',
-  'monthlySaving',
-  'monthlyExpense',
-  'monthlyPension',
-  'monthlyRental',
+  "currentSavings",
+  "monthlySaving",
+  "monthlyExpense",
+  "monthlyPension",
+  "monthlyRental",
 ]);
 
 const sections: {
@@ -60,34 +59,34 @@ const sections: {
   fields: { key: keyof FormState; label: string }[];
 }[] = [
   {
-    title: 'ข้อมูลอายุ',
+    title: "ข้อมูลอายุ",
     fields: [
-      { key: 'currentAge', label: 'อายุปัจจุบัน' },
-      { key: 'retirementAge', label: 'อายุที่จะเกษียณ' },
-      { key: 'lifeExpectancyAge', label: 'คาดว่าอยู่ถึงอายุ' },
+      { key: "currentAge", label: "อายุปัจจุบัน" },
+      { key: "retirementAge", label: "อายุที่จะเกษียณ" },
+      { key: "lifeExpectancyAge", label: "คาดว่าอยู่ถึงอายุ" },
     ],
   },
   {
-    title: 'เงินและค่าใช้จ่าย',
+    title: "เงินและค่าใช้จ่าย",
     fields: [
-      { key: 'currentSavings', label: 'เงินเก็บปัจจุบัน' },
-      { key: 'monthlySaving', label: 'ออมต่อเดือน' },
-      { key: 'monthlyExpense', label: 'ค่าใช้จ่าย/เดือน หลังเกษียณ' },
-      { key: 'monthlyPension', label: 'บำนาญ/เดือน' },
-      { key: 'monthlyRental', label: 'ค่าเช่า/เดือน' },
+      { key: "currentSavings", label: "เงินเก็บปัจจุบัน" },
+      { key: "monthlySaving", label: "ออมต่อเดือน" },
+      { key: "monthlyExpense", label: "ค่าใช้จ่าย/เดือน หลังเกษียณ" },
+      { key: "monthlyPension", label: "บำนาญ/เดือน" },
+      { key: "monthlyRental", label: "ค่าเช่า/เดือน" },
     ],
   },
   {
-    title: 'สมมติฐาน (% ต่อปี)',
+    title: "สมมติฐาน (% ต่อปี)",
     fields: [
-      { key: 'returnBefore', label: 'ผลตอบแทนก่อนเกษียณ' },
-      { key: 'returnAfter', label: 'ผลตอบแทนหลังเกษียณ' },
-      { key: 'inflationRate', label: 'เงินเฟ้อ' },
+      { key: "returnBefore", label: "ผลตอบแทนก่อนเกษียณ" },
+      { key: "returnAfter", label: "ผลตอบแทนหลังเกษียณ" },
+      { key: "inflationRate", label: "เงินเฟ้อ" },
     ],
   },
 ];
 
-const baht = (n: number) => n.toLocaleString('th-TH');
+const baht = (n: number) => n.toLocaleString("th-TH");
 
 export function Calculator() {
   const { user } = useAuth();
@@ -107,12 +106,11 @@ export function Calculator() {
   async function handleSave() {
     setSaving(true);
     try {
-      // ชื่อ field ของ form ตรงกับ backend DTO แล้ว → ส่งได้ตรงๆ ไม่ต้อง map
       await savePlan(form);
       setSaved(true);
-      showToast('บันทึกแผนเรียบร้อย ✓');
+      showToast("บันทึกแผนเรียบร้อย ✓");
     } catch {
-      showToast('บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง');
+      showToast("บันทึกไม่สำเร็จ ลองใหม่อีกครั้ง");
     } finally {
       setSaving(false);
     }
@@ -131,8 +129,8 @@ export function Calculator() {
     setSaved(false);
     try {
       const res = await fetch(`${API_URL}/retirement/calculate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       if (!res.ok) throw new Error(`คำนวณไม่สำเร็จ (${res.status})`);
@@ -140,12 +138,12 @@ export function Calculator() {
       setTimeout(
         () =>
           document
-            .getElementById('result')
-            ?.scrollIntoView({ behavior: 'smooth' }),
+            .getElementById("result")
+            ?.scrollIntoView({ behavior: "smooth" }),
         50,
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'เกิดข้อผิดพลาด');
+      setError(err instanceof Error ? err.message : "เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }
@@ -161,8 +159,8 @@ export function Calculator() {
   const onTrack = result ? result.gap <= 0 : false;
   const chartData = result
     ? [
-        { name: 'ควรมี', value: result.targetAmount, fill: '#44403c' },
-        { name: 'คาดว่าจะมี', value: result.projectedAmount, fill: '#0d9488' },
+        { name: "ควรมี", value: result.targetAmount, fill: "#44403c" },
+        { name: "คาดว่าจะมี", value: result.projectedAmount, fill: "#0d9488" },
       ]
     : [];
 
@@ -177,7 +175,9 @@ export function Calculator() {
             <h2 className="mt-2 text-2xl font-bold text-stone-900 sm:text-3xl">
               ลองคำนวณแผนเกษียณของคุณ
             </h2>
-            <p className="mt-2 text-stone-500">ใส่ตัวเลขด้านล่าง แล้วกดคำนวณได้เลย</p>
+            <p className="mt-2 text-stone-500">
+              ใส่ตัวเลขด้านล่าง แล้วกดคำนวณได้เลย
+            </p>
           </div>
 
           <form
@@ -207,8 +207,11 @@ export function Calculator() {
                               inputMode="numeric"
                               value={baht(form[key])}
                               onChange={(e) => {
-                                const digits = e.target.value.replace(/[^\d]/g, '');
-                                handleChange(key, digits === '' ? '0' : digits);
+                                const digits = e.target.value.replace(
+                                  /[^\d]/g,
+                                  "",
+                                );
+                                handleChange(key, digits === "" ? "0" : digits);
                               }}
                               className="w-full rounded-xl border border-stone-200 bg-stone-50 py-2 pl-7 pr-3 text-stone-800 transition focus:border-teal-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100"
                             />
@@ -217,7 +220,9 @@ export function Calculator() {
                               type="number"
                               min={0}
                               value={form[key]}
-                              onChange={(e) => handleChange(key, e.target.value)}
+                              onChange={(e) =>
+                                handleChange(key, e.target.value)
+                              }
                               className="w-full rounded-xl border border-stone-200 bg-stone-50 px-3 py-2 text-stone-800 transition focus:border-teal-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-100"
                             />
                           )}
@@ -233,7 +238,7 @@ export function Calculator() {
               disabled={loading}
               className="w-full rounded-full bg-teal-600 py-3.5 font-semibold text-white shadow-md transition hover:bg-teal-700 disabled:opacity-50"
             >
-              {loading ? 'กำลังคำนวณ…' : 'คำนวณแผนเกษียณ'}
+              {loading ? "กำลังคำนวณ…" : "คำนวณแผนเกษียณ"}
             </button>
           </form>
 
@@ -246,12 +251,20 @@ export function Calculator() {
           {result && (
             <div id="result" className="mt-8 space-y-6">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <StatCard label="ควรมีตอนเกษียณ" value={result.targetAmount} accent="text-stone-800" />
-                <StatCard label="คาดว่าจะมี" value={result.projectedAmount} accent="text-teal-600" />
                 <StatCard
-                  label={onTrack ? 'เกินเป้า' : 'ยังขาดอีก'}
+                  label="ควรมีตอนเกษียณ"
+                  value={result.targetAmount}
+                  accent="text-stone-800"
+                />
+                <StatCard
+                  label="คาดว่าจะมี"
+                  value={result.projectedAmount}
+                  accent="text-teal-600"
+                />
+                <StatCard
+                  label={onTrack ? "เกินเป้า" : "ยังขาดอีก"}
                   value={Math.abs(result.gap)}
-                  accent={onTrack ? 'text-green-600' : 'text-amber-600'}
+                  accent={onTrack ? "text-green-600" : "text-amber-600"}
                 />
               </div>
 
@@ -260,16 +273,27 @@ export function Calculator() {
                   เปรียบเทียบ เป้าหมาย vs เงินที่คาดว่าจะมี
                 </p>
                 <ResponsiveContainer width="100%" height={240}>
-                  <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                    <XAxis dataKey="name" tick={{ fontSize: 13, fill: '#78716c' }} axisLine={false} tickLine={false} />
+                  <BarChart
+                    data={chartData}
+                    margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                  >
+                    <XAxis
+                      dataKey="name"
+                      tick={{ fontSize: 13, fill: "#78716c" }}
+                      axisLine={false}
+                      tickLine={false}
+                    />
                     <YAxis
                       tickFormatter={(v) => `${(v / 1_000_000).toFixed(1)}M`}
-                      tick={{ fontSize: 12, fill: '#a8a29e' }}
+                      tick={{ fontSize: 12, fill: "#a8a29e" }}
                       axisLine={false}
                       tickLine={false}
                       width={40}
                     />
-                    <Tooltip formatter={(v) => [`${baht(Number(v))} ฿`, '']} cursor={{ fill: '#f5f5f4' }} />
+                    <Tooltip
+                      formatter={(v) => [`${baht(Number(v))} ฿`, ""]}
+                      cursor={{ fill: "#f5f5f4" }}
+                    />
                     <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                       {chartData.map((d) => (
                         <Cell key={d.name} fill={d.fill} />
@@ -281,37 +305,50 @@ export function Calculator() {
 
               <div className="rounded-3xl border border-stone-100 bg-white p-6 shadow-lg">
                 <div className="mb-2 flex items-center justify-between text-sm">
-                  <span className="font-medium text-stone-600">ความคืบหน้าสู่เป้าหมาย</span>
-                  <span className={`font-bold ${onTrack ? 'text-green-600' : 'text-teal-600'}`}>
+                  <span className="font-medium text-stone-600">
+                    ความคืบหน้าสู่เป้าหมาย
+                  </span>
+                  <span
+                    className={`font-bold ${onTrack ? "text-green-600" : "text-teal-600"}`}
+                  >
                     {percent}%
                   </span>
                 </div>
                 <div className="h-4 w-full overflow-hidden rounded-full bg-stone-100">
                   <div
-                    className={`h-full rounded-full transition-all duration-700 ${onTrack ? 'bg-green-500' : 'bg-teal-500'}`}
+                    className={`h-full rounded-full transition-all duration-700 ${onTrack ? "bg-green-500" : "bg-teal-500"}`}
                     style={{ width: `${percent}%` }}
                   />
                 </div>
                 <p className="mt-3 text-sm text-stone-500">
                   {onTrack
-                    ? 'เยี่ยม! แผนนี้มีเงินพอสำหรับเกษียณของคุณแล้ว'
+                    ? "เยี่ยม! แผนนี้มีเงินพอสำหรับเกษียณของคุณแล้ว"
                     : `ตอนนี้มีประมาณ ${percent}% ของเป้าหมาย — ลองเพิ่มเงินออมต่อเดือนดู`}
                 </p>
               </div>
 
               {user ? (
                 <div className="rounded-3xl border border-stone-100 bg-white p-6 text-center shadow-lg">
-                  <p className="mb-3 text-sm text-stone-500">อยากเก็บแผนนี้ไว้ดูภายหลังไหม?</p>
+                  <p className="mb-3 text-sm text-stone-500">
+                    อยากเก็บแผนนี้ไว้ดูภายหลังไหม?
+                  </p>
                   <button
                     onClick={handleSave}
                     disabled={saving}
                     className="rounded-full bg-teal-600 px-6 py-3 font-semibold text-white transition hover:bg-teal-700 disabled:opacity-50"
                   >
-                    {saving ? 'กำลังบันทึก…' : saved ? 'บันทึกแล้ว ✓' : 'บันทึกแผนนี้'}
+                    {saving
+                      ? "กำลังบันทึก…"
+                      : saved
+                        ? "บันทึกแล้ว ✓"
+                        : "บันทึกแผนนี้"}
                   </button>
                   {saved && (
                     <p className="mt-3 text-sm text-stone-600">
-                      <a href="/plans" className="font-medium text-teal-600 hover:underline">
+                      <a
+                        href="/plans"
+                        className="font-medium text-teal-600 hover:underline"
+                      >
                         ดูแผนของฉัน →
                       </a>
                     </p>
@@ -320,9 +357,12 @@ export function Calculator() {
               ) : (
                 <div className="rounded-3xl border border-stone-100 bg-white p-6 text-center shadow-lg">
                   <p className="text-sm text-stone-500">
-                    <a href="/login" className="font-medium text-teal-600 hover:underline">
+                    <a
+                      href="/login"
+                      className="font-medium text-teal-600 hover:underline"
+                    >
                       เข้าสู่ระบบ
-                    </a>{' '}
+                    </a>{" "}
                     เพื่อบันทึกแผนนี้ไว้ดูภายหลัง
                   </p>
                 </div>

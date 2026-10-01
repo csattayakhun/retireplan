@@ -1,4 +1,3 @@
-// src/auth/google.strategy.ts
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
@@ -23,7 +22,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
-  // Google เรียก validate() หลังผู้ใช้ยืนยันตัวตนสำเร็จ — profile = ข้อมูลจาก Google
   async validate(
     _accessToken: string,
     _refreshToken: string,
@@ -33,7 +31,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const email = profile.emails?.[0]?.value;
     if (!email) return done(new Error('ไม่พบอีเมลจากบัญชี Google'), undefined);
 
-    // มี user อีเมลนี้แล้ว → ผูก googleId, ไม่มี → สร้างใหม่ (upsert)
     const user = await this.prisma.user.upsert({
       where: { email },
       update: {
@@ -49,6 +46,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       },
     });
 
-    done(null, user); // แนบ user ไว้ที่ req.user
+    done(null, user);
   }
 }

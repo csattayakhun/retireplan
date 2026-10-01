@@ -19,11 +19,8 @@ export class AuthController {
   @ApiOperation({ summary: 'เริ่มเข้าสู่ระบบด้วย Google' })
   @Get('google')
   @UseGuards(GoogleAuthGuard)
-  googleAuth() {
-    // guard จัดการ redirect ไป Google ให้เอง
-  }
+  googleAuth() {}
 
-  // Google ส่งกลับมาที่นี่หลัง login สำเร็จ → ออก JWT → ส่งกลับ frontend
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleCallback(@CurrentUser() user: AuthUser, @Res() res: Response) {

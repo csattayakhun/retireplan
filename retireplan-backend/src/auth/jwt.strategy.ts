@@ -11,14 +11,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly prisma: PrismaService,
   ) {
     super({
-      // ดึง token จาก header: "Authorization: Bearer <token>"
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false, // ไม่ยอมรับ token ที่หมดอายุ
-      secretOrKey: config.getOrThrow<string>('JWT_SECRET'), // รหัสลับตัวเดียวกับตอนสร้าง
+      ignoreExpiration: false,
+      secretOrKey: config.getOrThrow<string>('JWT_SECRET'),
     });
   }
 
-  // passport เรียก validate() หลังตรวจว่า token ถูกต้อง — payload คือข้อมูลใน token
   async validate(payload: { sub: number; email: string }) {
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
@@ -27,6 +25,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException();
     }
     const { password, ...result } = user;
-    return result; // ค่านี้จะถูกแนบไว้ที่ req.user ให้ใช้ใน controller
+    return result;
   }
 }

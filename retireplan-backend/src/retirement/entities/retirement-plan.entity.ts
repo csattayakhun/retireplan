@@ -1,5 +1,3 @@
-// src/retirement/entities/retirement-plan.entity.ts
-// "หน้าตา" ของแผนที่ส่งออกไปหา client — ซ่อน userId (ข้อมูลภายใน)
 import { Exclude } from 'class-transformer';
 
 export class RetirementPlanEntity {
@@ -26,7 +24,7 @@ export class RetirementPlanEntity {
   createdAt!: Date;
   updatedAt!: Date;
 
-  @Exclude() userId!: number; // ซ่อนจาก response
+  @Exclude() userId!: number;
 
   constructor(partial: Partial<RetirementPlanEntity>) {
     Object.assign(this, partial);

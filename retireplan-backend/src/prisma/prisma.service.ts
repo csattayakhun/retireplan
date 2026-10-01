@@ -10,7 +10,6 @@ export class PrismaService
     await this.$connect();
   }
 
-  // ปิด connection ให้สะอาดตอนแอปปิด (กัน connection ค้าง)
   async onModuleDestroy() {
     await this.$disconnect();
   }

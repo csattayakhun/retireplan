@@ -1,4 +1,3 @@
-// src/retirement/retirement.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CalculateRetirementDto } from './dto/calculate-retirement.dto.js';
@@ -11,7 +10,6 @@ import {
   type RetirementResult,
 } from './retirement.calc.js';
 
-// ค่า default สมมติฐาน ให้ตรงกับ @default ใน schema.prisma (ใช้ตอน client ไม่ส่งมา)
 const DEFAULT_RETURN_BEFORE = 5;
 const DEFAULT_RETURN_AFTER = 2;
 const DEFAULT_INFLATION_RATE = 3;
@@ -20,12 +18,10 @@ const DEFAULT_INFLATION_RATE = 3;
 export class RetirementService {
   constructor(private readonly prisma: PrismaService) {}
 
-  /** endpoint คำนวณสดๆ ไม่บันทึก */
   calculate(dto: CalculateRetirementDto): RetirementResult {
     return calculateRetirement(dto);
   }
 
-  /** เติมค่า default ให้ครบก่อนส่งเข้า calc (ชื่อ field ตรงกันทุกเลเยอร์แล้ว) */
   private toCalcInput(p: CreateRetirementPlanDto): RetirementInput {
     return {
       currentAge: p.currentAge,
@@ -42,7 +38,6 @@ export class RetirementService {
     };
   }
 
-  /** C — สร้างแผน: คำนวณผลลัพธ์ แล้วบันทึกพร้อม userId เจ้าของ */
   async create(userId: number, dto: CreateRetirementPlanDto) {
     const result = calculateRetirement(this.toCalcInput(dto));
     const plan = await this.prisma.retirementPlan.create({
@@ -51,7 +46,6 @@ export class RetirementService {
     return new RetirementPlanEntity(plan);
   }
 
-  /** R — ดูแผนทั้งหมด "ของ user คนนี้เท่านั้น" */
   async findAll(userId: number) {
     const plans = await this.prisma.retirementPlan.findMany({
       where: { userId },
@@ -60,18 +54,16 @@ export class RetirementService {
     return plans.map((p) => new RetirementPlanEntity(p));
   }
 
-  /** R — ดูแผนเดียว (ต้องเป็นเจ้าของ ไม่งั้น 404) */
   async findOne(userId: number, id: number) {
     const plan = await this.prisma.retirementPlan.findFirst({
-      where: { id, userId }, // scope ด้วย userId → คนอื่นหาไม่เจอ
+      where: { id, userId },
     });
     if (!plan) throw new NotFoundException('ไม่พบแผนนี้ หรือคุณไม่ใช่เจ้าของ');
     return new RetirementPlanEntity(plan);
   }
 
-  /** U — แก้แผน: รวมค่าเดิม+ค่าใหม่ แล้วคำนวณใหม่ทั้งหมด */
   async update(userId: number, id: number, dto: UpdateRetirementPlanDto) {
-    const existing = await this.findOne(userId, id); // ตรวจ ownership ก่อน
+    const existing = await this.findOne(userId, id);
     const merged: CreateRetirementPlanDto = { ...existing, ...dto };
     const result = calculateRetirement(this.toCalcInput(merged));
     const plan = await this.prisma.retirementPlan.update({
@@ -81,9 +73,8 @@ export class RetirementService {
     return new RetirementPlanEntity(plan);
   }
 
-  /** D — ลบแผน (ต้องเป็นเจ้าของ) */
   async remove(userId: number, id: number) {
-    await this.findOne(userId, id); // ตรวจ ownership ก่อน
+    await this.findOne(userId, id);
     await this.prisma.retirementPlan.delete({ where: { id } });
     return { message: 'ลบแผนเรียบร้อย' };
   }

@@ -1,4 +1,3 @@
-// src/retirement/dto/create-retirement-plan.dto.ts
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsInt,

@@ -1,5 +1,3 @@
-// src/auth/entities/user.entity.ts
-// "หน้าตา" ของ user ที่ส่งออกไปหา client — ซ่อน field ภายในไม่ให้หลุด
 import { Exclude } from 'class-transformer';
 
 export class UserEntity {

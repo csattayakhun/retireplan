@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useAuth } from './auth-context';
+import { useState } from "react";
+import { useAuth } from "./auth-context";
 
 const navLinks = [
-  { href: '#top', label: 'หน้าหลัก' },
-  { href: '#how', label: 'วิธีใช้งาน' },
-  { href: '#calculator', label: 'คำนวณเกษียณ' },
+  { href: "#top", label: "หน้าหลัก" },
+  { href: "#how", label: "วิธีใช้งาน" },
+  { href: "#calculator", label: "คำนวณเกษียณ" },
 ];
 
 export function NavBar() {
@@ -27,7 +27,11 @@ export function NavBar() {
 
         <div className="hidden items-center gap-7 text-sm text-stone-500 md:flex">
           {navLinks.map((l) => (
-            <a key={l.href} href={l.href} className="transition hover:text-teal-600">
+            <a
+              key={l.href}
+              href={l.href}
+              className="transition hover:text-teal-600"
+            >
               {l.label}
             </a>
           ))}
@@ -43,7 +47,11 @@ export function NavBar() {
             <>
               <span className="flex items-center gap-2 text-sm text-stone-600">
                 {user.avatarUrl && (
-                  <img src={user.avatarUrl} alt="" className="h-7 w-7 rounded-full" />
+                  <img
+                    src={user.avatarUrl}
+                    alt=""
+                    className="h-7 w-7 rounded-full"
+                  />
                 )}
                 {user.name ?? user.email}
               </span>
@@ -85,7 +93,11 @@ export function NavBar() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              d={menuOpen ? 'M6 18L18 6M6 6l12 12' : 'M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5'}
+              d={
+                menuOpen
+                  ? "M6 18L18 6M6 6l12 12"
+                  : "M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5"
+              }
             />
           </svg>
         </button>

@@ -1,4 +1,3 @@
-// Server Component — static
 export function Footer() {
   return (
     <footer className="border-t border-stone-100 bg-white py-8 text-center text-sm text-stone-400">

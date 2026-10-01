@@ -1,6 +1,3 @@
-// src/config/env.validation.ts
-// ตรวจสอบ environment variables ตอนแอป "เริ่มทำงาน" (fail fast)
-// ใช้ class-validator ที่มีอยู่แล้ว — ไม่ต้องลง Joi เพิ่ม
 import { plainToInstance } from 'class-transformer';
 import { IsNotEmpty, IsString, validateSync } from 'class-validator';
 
@@ -41,7 +38,6 @@ export function validateEnv(config: Record<string, unknown>) {
     const messages = errors
       .map((e) => Object.values(e.constraints ?? {}).join(', '))
       .join('\n');
-    // โยน error → แอปจะไม่ยอม boot ถ้า env ไม่ครบ (ดีกว่าพังตอน runtime)
     throw new Error(`❌ Environment variables ไม่ถูกต้อง:\n${messages}`);
   }
 

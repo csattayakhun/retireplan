@@ -1,5 +1,3 @@
-// src/retirement/dto/calculate-retirement.dto.ts
-// ชื่อ field ตรงกับ schema.prisma / RetirementInput — ไม่ต้อง map ข้ามเลเยอร์
 import { IsInt, IsNumber, IsOptional, Min, Max } from 'class-validator';
 
 export class CalculateRetirementDto {
@@ -28,7 +26,7 @@ export class CalculateRetirementDto {
 
   @IsInt()
   @Min(0)
-  monthlyExpense!: number; // ค่าใช้จ่ายต่อเดือนหลังเกษียณ (ราคาปัจจุบัน)
+  monthlyExpense!: number;
 
   @IsOptional()
   @IsInt()
@@ -43,15 +41,15 @@ export class CalculateRetirementDto {
   @IsNumber()
   @Min(0)
   @Max(100)
-  returnBefore!: number; // % ต่อปี ก่อนเกษียณ (6 = 6%)
+  returnBefore!: number;
 
   @IsNumber()
   @Min(0)
   @Max(100)
-  returnAfter!: number; // % ต่อปี หลังเกษียณ
+  returnAfter!: number;
 
   @IsNumber()
   @Min(0)
   @Max(100)
-  inflationRate!: number; // % เงินเฟ้อต่อปี
+  inflationRate!: number;
 }

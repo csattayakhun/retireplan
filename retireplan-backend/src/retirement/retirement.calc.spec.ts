@@ -6,7 +6,6 @@ import {
   type RetirementInput,
 } from './retirement.calc.js';
 
-// input กลางไว้ใช้ซ้ำ แล้ว override ทีละเคส (DRY)
 const base: RetirementInput = {
   currentAge: 30,
   retirementAge: 60,
@@ -22,18 +21,16 @@ const base: RetirementInput = {
 describe('calcProjectedAmount (เงินที่คาดว่าจะมี)', () => {
   it('ผลตอบแทน 0% → บวกเงินตรงๆ (กัน edge case หารศูนย์)', () => {
     const input = { ...base, currentSavings: 100_000, monthlySaving: 5_000 };
-    // 100,000 + (5,000 × 360 เดือน) = 1,900,000
     expect(calcProjectedAmount(input)).toBe(1_900_000);
   });
 
   it('มีผลตอบแทน → ใช้ Future Value of Annuity ถูกต้อง', () => {
     const input = {
       ...base,
-      currentAge: 59, // เหลือ 12 เดือน ก่อนเกษียณ
+      currentAge: 59,
       monthlySaving: 10_000,
-      returnBefore: 12, // 1% ต่อเดือน
+      returnBefore: 12,
     };
-    // 10,000 × ((1.01^12 − 1) / 0.01) ≈ 126,825
     expect(calcProjectedAmount(input)).toBe(126_825);
   });
 
@@ -52,10 +49,9 @@ describe('calcTargetAmount (เงินที่ควรมี)', () => {
   it('ผลตอบแทนหลังเกษียณ 0% + เงินเฟ้อ 0% → ค่าใช้จ่าย × จำนวนเดือน', () => {
     const input = {
       ...base,
-      currentAge: 60, // เกษียณเลย → ไม่ต้องปรับเงินเฟ้อ
+      currentAge: 60,
       monthlyExpense: 20_000,
     };
-    // 20,000 × (20 ปี × 12) = 4,800,000
     expect(calcTargetAmount(input)).toBe(4_800_000);
   });
 
@@ -65,7 +61,7 @@ describe('calcTargetAmount (เงินที่ควรมี)', () => {
       currentAge: 60,
       monthlyExpense: 20_000,
       monthlyPension: 15_000,
-      monthlyRental: 6_000, // รวม 21,000 > 20,000
+      monthlyRental: 6_000,
     };
     expect(calcTargetAmount(input)).toBe(0);
   });
