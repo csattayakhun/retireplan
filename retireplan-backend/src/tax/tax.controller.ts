@@ -6,10 +6,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('tax')
 @Controller('tax')
-@Controller('tax')
 export class TaxController {
   constructor(private readonly taxService: TaxService) {}
-
 
   @Post('calculate')
   calculate(@Body() dto: CalculateTaxDto) {
