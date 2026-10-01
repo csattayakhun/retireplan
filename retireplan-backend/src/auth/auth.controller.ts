@@ -6,6 +6,7 @@ import type { Response } from 'express';
 import { AuthService } from './auth.service.js';
 import { GoogleAuthGuard } from './google-auth.guard.js';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
+import { UserEntity } from './entities/user.entity.js';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -41,7 +42,7 @@ export class AuthController {
   @ApiOperation({ summary: 'ดูข้อมูลผู้ใช้ปัจจุบัน' })
   @UseGuards(JwtAuthGuard)
   @Get('me')
-  me(@Req() req: { user: unknown }) {
-    return req.user;
+  me(@Req() req: { user: Record<string, unknown> }) {
+    return new UserEntity(req.user);
   }
 }
