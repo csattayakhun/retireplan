@@ -10,14 +10,12 @@ import { GoogleStrategy } from './google.strategy.js';
 
 @Module({
   imports: [
-    // ตั้งค่า JWT โดยดึงรหัสลับจาก .env (ผ่าน ConfigService)
-// ✅ แก้เป็น
     PassportModule.register({ defaultStrategy: 'jwt' }),
-        JwtModule.registerAsync({
+    JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET'), // รหัสลับจาก .env
-        signOptions: { expiresIn: '1d' },          // token หมดอายุใน 1 วัน
+        secret: config.getOrThrow<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
       }),
     }),
   ],

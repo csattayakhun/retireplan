@@ -14,7 +14,7 @@ interface AuthRequest extends Request {
   user: { id: number; email: string };
 }
 
-@ApiTags('retirement') // ⬅️ จัดกลุ่มใน Swagger
+@ApiTags('retirement')
 @Controller('retirement')
 export class RetirementController {
   constructor(private readonly retirementService: RetirementService) {}
@@ -25,7 +25,7 @@ export class RetirementController {
     return this.retirementService.calculate(dto);
   }
 
-  @ApiBearerAuth() // ⬅️ route นี้ต้องมี token
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'สร้างแผนเกษียณ (คำนวณ + บันทึก)' })
   @UseGuards(JwtAuthGuard)
   @Post('plans')

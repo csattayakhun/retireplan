@@ -11,6 +11,11 @@ import {
   type RetirementResult,
 } from './retirement.calc.js';
 
+// ค่า default สมมติฐาน ให้ตรงกับ @default ใน schema.prisma (ใช้ตอน client ไม่ส่งมา)
+const DEFAULT_RETURN_BEFORE = 5;
+const DEFAULT_RETURN_AFTER = 2;
+const DEFAULT_INFLATION_RATE = 3;
+
 @Injectable()
 export class RetirementService {
   constructor(private readonly prisma: PrismaService) {}
@@ -31,9 +36,9 @@ export class RetirementService {
       monthlyExpenseAfterRetire: p.monthlyExpense,
       monthlyPension: p.monthlyPension ?? 0,
       monthlyRentIncome: p.monthlyRental ?? 0,
-      returnBefore: p.returnBefore ?? 5,
-      returnAfter: p.returnAfter ?? 2,
-      inflation: p.inflationRate ?? 3,
+      returnBefore: p.returnBefore ?? DEFAULT_RETURN_BEFORE,
+      returnAfter: p.returnAfter ?? DEFAULT_RETURN_AFTER,
+      inflation: p.inflationRate ?? DEFAULT_INFLATION_RATE,
     };
   }
 

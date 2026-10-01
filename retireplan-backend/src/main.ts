@@ -25,10 +25,10 @@ async function bootstrap() {
     .setTitle('RetirePlan API')
     .setDescription('API วางแผนเกษียณ + คำนวณภาษีเงินได้บุคคลธรรมดา')
     .setVersion('1.0')
-    .addBearerAuth() // ⬅️ เพิ่มปุ่ม "Authorize" ให้ใส่ JWT ทดสอบ route ที่ต้อง login
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document); // ⬅️ เปิดที่ /docs
+  SwaggerModule.setup('docs', app, document);
 
   await app.listen(process.env.PORT ?? 3000);
 
